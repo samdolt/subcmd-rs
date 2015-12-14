@@ -1,5 +1,9 @@
+## Status
 
-Cargo style subcommand
+- [![Build Status](https://travis-ci.org/samdolt/subcmd-rs.svg?branch=master)](https://travis-ci.org/samdolt/subcmd-rs)
+- ![Rust min version](https://img.shields.io/badge/Rust-%3E%3D%201.0-blue.svg)
+
+## Cargo style subcommand
 
 This library help to build an app that use a similar command line interface
 as Cargo or Git:
