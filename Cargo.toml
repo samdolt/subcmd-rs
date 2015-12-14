@@ -1,0 +1,7 @@
+[package]
+name = "subcmd"
+version = "0.0.1"
+authors = ["Samuel Dolt <samuel@dolt.ch>"]
+
+[dependencies]
+getopts = "0.2"
