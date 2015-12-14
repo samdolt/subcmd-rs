@@ -5,6 +5,7 @@
 //
 // See the COPYRIGHT file at the top-level directory of this distribution.
 
+#![warn(missing_docs)]
 
 //! Cargo style subcommand
 //!
