@@ -1,7 +1,8 @@
 ## Status
 
-- [![Build Status](https://travis-ci.org/samdolt/subcmd-rs.svg?branch=master)](https://travis-ci.org/samdolt/subcmd-rs)
-- ![Rust min version](https://img.shields.io/badge/Rust-%3E%3D%201.0-blue.svg)
+[![Build Status](https://travis-ci.org/samdolt/subcmd-rs.svg?branch=master)](https://travis-ci.org/samdolt/subcmd-rs)
+![Rust min version](https://img.shields.io/badge/Rust-%3E%3D%201.0-blue.svg)
+[![Crates.io version](https://img.shields.io/crates/v/subcmd.svg)](https://crates.io/crates/subcmd/)
 
 ## Cargo style subcommand
 
