@@ -1,4 +1,11 @@
-use ::Command;
+// Copyright © 2015 - Samuel Dolt <samuel@dolt.ch>
+//
+// Licensed under the MIT license. This file may not be copied, modified,
+// or distributed except according to those terms.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+
+use Command;
 
 pub struct Handler<'a> {
     description: Option<&'a str>,
@@ -6,7 +13,6 @@ pub struct Handler<'a> {
 }
 
 impl<'a> Handler<'a> {
-
     pub fn new() -> Handler<'a> {
         Handler {
             description: None,
@@ -18,9 +24,9 @@ impl<'a> Handler<'a> {
         self.description = Some(descr);
     }
 
-    pub fn run(&self){
-
+    pub fn add(&mut self, command: Box<Command>) {
+        self.subcmd.push(command);
     }
 
+    pub fn run(&self) {}
 }
-
