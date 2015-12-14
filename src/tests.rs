@@ -10,8 +10,8 @@ use super::*;
 struct CmdA;
 
 impl Command for CmdA {
-    fn name(&self) -> CmdName {
-        CmdName::new("CmdA").unwrap()
+    fn name<'a>(&self) -> &'a str {
+        "cmd-a"
     }
     fn help<'a>(&self) -> &'a str {
         "HELP"
@@ -27,10 +27,12 @@ impl Command for CmdA {
 #[test]
 fn it_works() {
 
-    let cmd1: Box<Command> = Box::new(CmdA);
     let mut handler = Handler::new();
 
-    handler.add(cmd1);
+    handler.add(Box::new(CmdA));
 
-    handler.run();
+    let mut args: Vec<String> = Vec::new();
+    args.push("my-bin".to_string());
+    args.push("cmd-a".to_string());
+    handler.run_with_args(&args);
 }
