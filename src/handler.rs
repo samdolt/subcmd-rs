@@ -58,8 +58,15 @@ impl<'a> Handler<'a> {
     }
 
     fn print_usage(&self, program: &str, opts: &Options) {
-        let brief = format!("Usage: {} [options] <command>", program);
+        let mut brief = String::with_capacity(250);
+        brief.push_str("Usage:\n");
+        brief.push_str(&format!("\t{} <command> [<args>...]", program));
+        brief.push_str(&format!("\t{} [options]", program));
         print!("{}", opts.usage(&brief));
+
+        for cmd in self.subcmd.iter() {
+            println!("\t{}\t\t{}",cmd.name(), cmd.description());
+        }
     }
 
     /// Run the main logic without auto retrieving of argv
