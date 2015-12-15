@@ -25,7 +25,7 @@ i.e. Automaticaly pass argv to a corresponding subcommand (here build or clean).
 
 ## Futur plans
 
-- [ ] Subcommand help with `myproject help subcommand`
+- [x] Subcommand help with `myproject help subcommand`
 - [ ] Search for `myproject-cmd-subcommand` in the $PATH if there is no built-in subcommand.
 - [ ] Allow project wide option like `myproject --verbose clean` instead of `myproject clean --verbose`
 
