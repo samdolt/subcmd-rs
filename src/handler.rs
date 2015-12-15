@@ -60,12 +60,33 @@ impl<'a> Handler<'a> {
     fn print_usage(&self, program: &str, opts: &Options) {
         let mut brief = String::with_capacity(250);
         brief.push_str("Usage:\n");
-        brief.push_str(&format!("\t{} <command> [<args>...]", program));
+        brief.push_str(&format!("\t{} <command> [<args>...]\n", program));
         brief.push_str(&format!("\t{} [options]", program));
-        print!("{}", opts.usage(&brief));
+        println!("{}", opts.usage(&brief));
+
+        println!("Commands are:");
+
+        let cmd_name_max_len = {
+            let mut max_len = 0;
+
+            for cmd in self.subcmd.iter() {
+                if cmd.name().len() > max_len {
+                    max_len = cmd.name().len();
+                }
+            }
+
+            max_len
+        };
 
         for cmd in self.subcmd.iter() {
-            println!("\t{}\t\t{}",cmd.name(), cmd.description());
+            let mut name = cmd.name().to_string();
+
+            // Alignement
+            while name.len() < (cmd_name_max_len + 6) {
+                name.push(' ');
+            }
+
+            println!("    {}{}",name, cmd.description());
         }
     }
 
