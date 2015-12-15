@@ -27,6 +27,7 @@ use getopts::ParsingStyle;
 pub struct Handler<'a> {
     description: Option<&'a str>,
     subcmd: Vec<Box<Command>>,
+    program: String,
 }
 
 impl<'a> Handler<'a> {
@@ -35,6 +36,7 @@ impl<'a> Handler<'a> {
         Handler {
             description: None,
             subcmd: Vec::new(),
+            program: String::with_capacity(30),
         }
     }
 
@@ -52,16 +54,33 @@ impl<'a> Handler<'a> {
     ///
     /// This function retrieve argv, parse-it and run the corresponding
     /// subcommand
-    pub fn run(&self) {
+    pub fn run(&mut self) {
         let args: Vec<String> = env::args().collect();
         self.run_with_args(&args)
     }
 
-    fn print_usage(&self, program: &str, opts: &Options) {
+    fn short_usage(&self) -> String {
+        // Here we should have a program name
+        debug_assert!(self.program.len() > 0);
+
+        let mut usage = String::with_capacity(150);
+        usage.push_str("Usage:\n");
+        usage.push_str(&format!("\t{} <command> [<args>...]\n", self.program));
+        usage.push_str(&format!("\t{} [options]", self.program));
+
+        usage
+    }
+
+    fn print_usage(&self, opts: &Options) {
         let mut brief = String::with_capacity(250);
-        brief.push_str("Usage:\n");
-        brief.push_str(&format!("\t{} <command> [<args>...]\n", program));
-        brief.push_str(&format!("\t{} [options]", program));
+
+        match self.description {
+            Some(descr) => brief.push_str(&format!("{}\n\n", descr)),
+            None        => {},
+        }
+
+        brief.push_str(&self.short_usage());
+
         println!("{}", opts.usage(&brief));
 
         println!("Commands are:");
@@ -88,11 +107,20 @@ impl<'a> Handler<'a> {
 
             println!("    {}{}",name, cmd.description());
         }
+
+        print!("\nSee '{} help <command>' for more information ", self.program);
+        println!("on a specific command.");
+    }
+
+    fn bad_usage(&self) {
+        println!("Invalid arguments.\n");
+        println!("{}", self.short_usage());
     }
 
     /// Run the main logic without auto retrieving of argv
-    pub fn run_with_args(&self, args: &Vec<String>) {
-        let program = args[0].clone();
+    pub fn run_with_args(&mut self, args: &Vec<String>) {
+        self.program = args[0].clone();
+
         let mut opts = Options::new();
 
         // We don't want to parse option after the subcommand
@@ -102,21 +130,32 @@ impl<'a> Handler<'a> {
 
         let matches = match opts.parse(&args[1..]) {
             Ok(m) => m,
-            Err(f) => panic!(f.to_string()),
+            Err(f) => {
+                self.bad_usage();
+                return;
+            },
         };
 
+        // Catch a -h/--help request
         if matches.opt_present("h") {
-            self.print_usage(&program, &opts);
+            // -h/--help don't allow other options/args
+            if matches.free.len() != 0 {
+                self.bad_usage();
+                return;
+            }
+            self.print_usage(&opts);
             return;
         }
 
+        // Catch the command
         let command = if !matches.free.is_empty() {
             matches.free[0].clone()
         } else {
-            self.print_usage(&program, &opts);
+            self.bad_usage();
             return;
         };
 
+        // Run the command
         for cmd in self.subcmd.iter() {
             if cmd.name() == command {
                 cmd.run(&args);
@@ -124,6 +163,22 @@ impl<'a> Handler<'a> {
             }
         }
 
-        self.print_usage(&program, &opts);
+        // Check built-in command
+        if (command == "help") && (matches.free.len() == 2) {
+            self.help_for_command(&matches.free[1]);
+            return;
+        }
+
+        self.bad_usage();
+    }
+
+
+    fn help_for_command(&self, name: &str) {
+        for cmd in self.subcmd.iter() {
+            if cmd.name() == name {
+                println!("{}", cmd.help());
+                return;
+            };
+        };
     }
 }
