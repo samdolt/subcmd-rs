@@ -79,6 +79,7 @@ impl<'a> Handler<'a> {
 
         if matches.opt_present("h") {
             self.print_usage(&program, &opts);
+            return;
         }
 
         let command = if !matches.free.is_empty() {
