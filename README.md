@@ -1,6 +1,7 @@
 ## Status
 
-[![Build Status](https://travis-ci.org/samdolt/subcmd-rs.svg?branch=master)](https://travis-ci.org/samdolt/subcmd-rs)
+[![Build Status](https://img.shields.io/travis/samdolt/subcmd-rs.svg?label=Linux%20%2F%20OS%20X%20build)](https://travis-ci.org/samdolt/subcmd-rs)
+[![App Veyor Status](https://img.shields.io/appveyor/ci/samdolt/subcmd-rs.svg?label=Windows%20build)](https://ci.appveyor.com/project/samdolt/subcmd-rs)
 ![Rust min version](https://img.shields.io/badge/Rust-%3E%3D%201.0-blue.svg)
 [![Crates.io version](https://img.shields.io/crates/v/subcmd.svg)](https://crates.io/crates/subcmd/)
 
