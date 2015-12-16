@@ -8,8 +8,11 @@
 
 use Command;
 use std::env;
+use std::io::stdout;
+use std::io::Write;
 use getopts::Options;
 use getopts::ParsingStyle;
+use tabwriter::TabWriter;
 
 /// Command line parser and subcommand runner
 ///
@@ -76,7 +79,7 @@ impl<'a> Handler<'a> {
 
         match self.description {
             Some(descr) => brief.push_str(&format!("{}\n\n", descr)),
-            None        => {},
+            None => {}
         }
 
         brief.push_str(&self.short_usage());
@@ -85,30 +88,14 @@ impl<'a> Handler<'a> {
 
         println!("Commands are:");
 
-        let cmd_name_max_len = {
-            let mut max_len = 0;
-
-            for cmd in self.subcmd.iter() {
-                if cmd.name().len() > max_len {
-                    max_len = cmd.name().len();
-                }
-            }
-
-            max_len
-        };
-
+        let mut tw = TabWriter::new(stdout());
         for cmd in self.subcmd.iter() {
-            let mut name = cmd.name().to_string();
-
-            // Alignement
-            while name.len() < (cmd_name_max_len + 6) {
-                name.push(' ');
-            }
-
-            println!("    {}{}",name, cmd.description());
+            write!(&mut tw, "    {}\t{}\n", cmd.name(), cmd.description()).unwrap();
         }
+        tw.flush().unwrap();
 
-        print!("\nSee '{} help <command>' for more information ", self.program);
+        print!("\nSee '{} help <command>' for more information ",
+               self.program);
         println!("on a specific command.");
     }
 
@@ -130,10 +117,10 @@ impl<'a> Handler<'a> {
 
         let matches = match opts.parse(&args[1..]) {
             Ok(m) => m,
-            Err(f) => {
+            Err(_) => {
                 self.bad_usage();
                 return;
-            },
+            }
         };
 
         // Catch a -h/--help request
@@ -179,6 +166,6 @@ impl<'a> Handler<'a> {
                 println!("{}", cmd.help());
                 return;
             };
-        };
+        }
     }
 }

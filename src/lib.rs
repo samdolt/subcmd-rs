@@ -55,6 +55,7 @@
 //! ```
 
 extern crate getopts;
+extern crate tabwriter;
 
 mod handler;
 pub use handler::Handler;

@@ -12,4 +12,4 @@ license = "MIT"
 
 [dependencies]
 getopts = "0.2"
-
+tabwriter = "0.1"
