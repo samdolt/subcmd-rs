@@ -1,49 +1,16 @@
 sudo: false
 language: rust
-# necessary for `travis-cargo coveralls --no-sudo`
-addons:
-  apt:
-    packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev # optional: only required for the --verify flag of coveralls
+os:
+    - linux
+    - osx
 
 # run builds for all the trains (and more)
 rust:
+  - nightly
   - beta
-  # check it compiles on the latest stable compiler
   - stable
-  # and the first stable one (this should be bumped as the minimum
-  # Rust version required changes)
   - 1.0.0
 
-# load travis-cargo
-before_script:
-  - |
-      pip install 'travis-cargo<0.2' --user &&
-      export PATH=$HOME/.local/bin:$PATH
-
-# the main build
-script:
-  - |
-      travis-cargo build &&
-      travis-cargo test &&
-      travis-cargo bench &&
-      travis-cargo --only stable doc
-after_success:
-  # upload the documentation from the build with stable (automatically only actually
-  # runs on the master branch, not individual PRs)
-  - travis-cargo --only stable doc-upload
-  # measure code coverage and upload to coveralls.io (the verify
-  # argument mitigates kcov crashes due to malformed debuginfo, at the
-  # cost of some speed <https://github.com/huonw/travis-cargo/issues/12>)
-  - travis-cargo coveralls --no-sudo --verify
-
-env:
-  global:
-    # override the default `--features unstable` used for the nightly branch (optional)
-    - TRAVIS_CARGO_NIGHTLY_FEATURE=nightly
-env:
-  global:
-    secure: hVc1kPZzAsvwVAZSEz7gtQA/GUxgQNeYM1GUf5wyoxSxvE3iyYiq5e6AH2ry7xnH+yEW9pune0Ov8xvcEjqQ/BpB/z0HQAL5EuCOb9vD97s+nNRO1Hlua5JimcjzscmeEG7TqawF8o8tpkgtaa2L/0A+QeX8ofqfirNVQjGrhrhm/FJCO8q224Ih7ot6yPC0BxDsYs58aAaDu2ol7cmiT4/MWr2Cxupi5WiQ/t1eilT25Vxgy0pPDGrZGO9OX+aQrBnzyQ9viposnM9Zsk0oCSWB9SRdJaIsUlsg6ZKNzZ13tgcG8NhOuYtXQ7gTS+LnXqkgU+I3zQAp9P/pP+28nRBMU49xWtn3bhTdzudns5yuJPnpDFG1gZzU2uc6RbyUZZfwZtROpXtqKAFi3qAW1b7YrZlwM41n2MrQZFAQHlFbpc4USsjKsIATJwhMnonGEXG3hLCQXU+LeY43phwY5k+VaAOndBu+KqgE6PTR2Ts+AdHAw9nqe3Jh8TuDANJK74GAyVHkPi1WN5pC5PmaKphvpyhKga+NfqNpEfe/YP+bFMaRoG8YwvqzrxaoTwIGXx801eVUStU+VgCUKhVUl8cln3IoBrZJQUtSFK/hm2TbCHA1V9XqDOPnZwcdFhKuJLbvdefIBISBl9iRu/UVdRNrPyoFoFkbS2kTTz+PZlM=
+matrix:
+    allow_failures:
+        - rust: nightly
