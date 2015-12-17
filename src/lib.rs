@@ -57,6 +57,7 @@
 extern crate getopts;
 extern crate tabwriter;
 extern crate strsim;
+extern crate ansi_term;
 
 mod handler;
 pub use handler::Handler;

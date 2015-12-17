@@ -14,6 +14,15 @@ use getopts::Options;
 use getopts::ParsingStyle;
 use tabwriter::TabWriter;
 use strsim::damerau_levenshtein;
+use ansi_term::Colour::Red;
+
+fn print_error(msg: &str) {
+    if cfg!(target_os = "macos") || cfg!(target_os = "linux") {
+        println!("{}", Red.paint(msg).to_string());
+    } else {
+        println!("{}", msg);
+    }
+}
 
 /// Command line parser and subcommand runner
 ///
@@ -101,7 +110,7 @@ impl<'a> Handler<'a> {
     }
 
     fn bad_usage(&self) {
-        println!("Invalid arguments.\n");
+        print_error("Invalid arguments.\n");
         println!("{}", self.short_usage());
     }
 
@@ -172,11 +181,11 @@ impl<'a> Handler<'a> {
 
         match sim_cmd {
             Some(cmd) => {
-                println!("No such subcommand\n");
-                println!("    Did you mean `{}`?", cmd.name());
+                print_error("No such subcommand\n");
+                print_error(&format!("    Did you mean `{}`?", cmd.name()));
                 return;
             }
-            None => {} 
+            None => {}
         };
 
         self.bad_usage();
