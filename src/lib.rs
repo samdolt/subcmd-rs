@@ -21,7 +21,7 @@
 //!
 //! ```
 //! extern crate subcmd;
-//! use subcmd::Handler;
+//! use subcmd::CmdHandler;
 //! use subcmd::Command;
 //!
 //! struct CmdBuild;
@@ -47,7 +47,7 @@
 //! }
 //!
 //! fn main() {
-//!     let mut handler = Handler::new();
+//!     let mut handler = CmdHandler::new();
 //!     handler.add(Box::new(CmdBuild));
 //!     handler.add(Box::new(CmdClean));
 //!     handler.run();
@@ -60,8 +60,16 @@ extern crate strsim;
 extern crate ansi_term;
 
 mod handler;
-pub use handler::Handler;
+pub use handler::CmdHandler;
 
+mod message;
+pub use message::Message;
+
+mod result;
+pub use result::CmdResult;
+
+mod wrapper;
+pub use wrapper::CmdWrapper;
 
 /// This trait must be implemented for each subcommand
 pub trait Command {
@@ -79,6 +87,3 @@ pub trait Command {
     /// with the program name in argv[0]
     fn run(&self, argv: &Vec<String>);
 }
-
-#[cfg(test)]
-mod tests;
