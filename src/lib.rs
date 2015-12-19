@@ -59,12 +59,17 @@ extern crate tabwriter;
 extern crate strsim;
 extern crate ansi_term;
 
-mod cmd_handler;
-pub use cmd_handler::CmdHandler;
+mod handler;
+pub use handler::CmdHandler;
 
 mod message;
 pub use message::Message;
 
+mod result;
+pub use result::CmdResult;
+
+mod wrapper;
+pub use wrapper::CmdWrapper;
 
 /// This trait must be implemented for each subcommand
 pub trait Command {
@@ -82,6 +87,3 @@ pub trait Command {
     /// with the program name in argv[0]
     fn run(&self, argv: &Vec<String>);
 }
-
-#[cfg(test)]
-mod tests;

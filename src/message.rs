@@ -1,3 +1,10 @@
+// Copyright © 2015 - Samuel Dolt <samuel@dolt.ch>
+//
+// Licensed under the MIT license. This file may not be copied, modified,
+// or distributed except according to those terms.
+//
+// See the COPYRIGHT file at the top-level directory of this distribution.
+
 use ansi_term::Colour::Red;
 
 /// A Message to be printed
@@ -15,7 +22,6 @@ pub struct Message {
 }
 
 impl Message {
-
     /// Return a new Message
     pub fn new() -> Message {
         Message {
@@ -85,11 +91,11 @@ mod tests {
         assert_eq!(msg.get(), "");
         assert_eq!(msg.is_error(), false);
 
-        if cfg!(target_os="linux") {
+        if cfg!(target_os = "linux") {
             assert_eq!(msg.is_formated(), true);
-        } else if cfg!(target_os="macos") {
+        } else if cfg!(target_os = "macos") {
             assert_eq!(msg.is_formated(), true);
-        } else if cfg!(target_os="windows") {
+        } else if cfg!(target_os = "windows") {
             assert_eq!(msg.is_formated(), false);
         } else {
             assert_eq!(msg.is_formated(), false);
