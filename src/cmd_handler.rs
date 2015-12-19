@@ -16,6 +16,7 @@ use tabwriter::TabWriter;
 use strsim::damerau_levenshtein;
 use ansi_term::Colour::Red;
 
+
 fn print_error(msg: &str) {
     if cfg!(target_os = "macos") || cfg!(target_os = "linux") {
         println!("{}", Red.paint(msg).to_string());
@@ -29,7 +30,7 @@ fn print_error(msg: &str) {
 /// # Example
 ///
 /// ```ignore
-/// let mut handler = Handler::new();
+/// let mut handler = CmdHandler::new();
 ///
 /// // Add your custom command
 /// handler.add(Box::new(MyCommand));
@@ -37,16 +38,16 @@ fn print_error(msg: &str) {
 ///
 /// handler.run(); // Run main logic
 /// ```
-pub struct Handler<'a> {
+pub struct CmdHandler<'a> {
     description: Option<&'a str>,
     subcmd: Vec<Box<Command>>,
     program: String,
 }
 
-impl<'a> Handler<'a> {
-    /// Create a new `Handler`
-    pub fn new() -> Handler<'a> {
-        Handler {
+impl<'a> CmdHandler<'a> {
+    /// Create a new `CmdHandler`
+    pub fn new() -> CmdHandler<'a> {
+        CmdHandler {
             description: None,
             subcmd: Vec::new(),
             program: String::with_capacity(30),

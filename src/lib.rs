@@ -21,7 +21,7 @@
 //!
 //! ```
 //! extern crate subcmd;
-//! use subcmd::Handler;
+//! use subcmd::CmdHandler;
 //! use subcmd::Command;
 //!
 //! struct CmdBuild;
@@ -47,7 +47,7 @@
 //! }
 //!
 //! fn main() {
-//!     let mut handler = Handler::new();
+//!     let mut handler = CmdHandler::new();
 //!     handler.add(Box::new(CmdBuild));
 //!     handler.add(Box::new(CmdClean));
 //!     handler.run();
@@ -59,8 +59,8 @@ extern crate tabwriter;
 extern crate strsim;
 extern crate ansi_term;
 
-mod handler;
-pub use handler::Handler;
+mod cmd_handler;
+pub use cmd_handler::CmdHandler;
 
 
 /// This trait must be implemented for each subcommand

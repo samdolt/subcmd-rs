@@ -1,13 +1,13 @@
 [package]
 name = "subcmd"
-version = "0.0.2"
+version = "0.1.0"
 authors = ["Samuel Dolt <samuel@dolt.ch>"]
 description = "Cargo like subcommand parser"
 documentation = "https://samdolt.github.io/subcmd-rs/"
 repository = "https://github.com/samdolt/subcmd-rs/"
 homepage = "https://github.com/samdolt/subcmd-rs/"
 readme = "README.md"
-keyword = ["subcommand", "args", "argv", "options"]
+keywords = ["subcommand", "args", "argv", "options"]
 license = "MIT"
 
 [dependencies]

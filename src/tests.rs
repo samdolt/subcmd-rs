@@ -27,7 +27,7 @@ impl Command for CmdA {
 #[test]
 fn it_works() {
 
-    let mut handler = Handler::new();
+    let mut handler = CmdHandler::new();
 
     handler.add(Box::new(CmdA));
 
