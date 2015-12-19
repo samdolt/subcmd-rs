@@ -62,6 +62,9 @@ extern crate ansi_term;
 mod cmd_handler;
 pub use cmd_handler::CmdHandler;
 
+mod message;
+pub use message::Message;
+
 
 /// This trait must be implemented for each subcommand
 pub trait Command {

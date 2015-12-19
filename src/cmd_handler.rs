@@ -7,6 +7,8 @@
 
 
 use Command;
+use Message;
+
 use std::env;
 use std::io::stdout;
 use std::io::Write;
@@ -14,16 +16,6 @@ use getopts::Options;
 use getopts::ParsingStyle;
 use tabwriter::TabWriter;
 use strsim::damerau_levenshtein;
-use ansi_term::Colour::Red;
-
-
-fn print_error(msg: &str) {
-    if cfg!(target_os = "macos") || cfg!(target_os = "linux") {
-        println!("{}", Red.paint(msg).to_string());
-    } else {
-        println!("{}", msg);
-    }
-}
 
 /// Command line parser and subcommand runner
 ///
@@ -111,8 +103,12 @@ impl<'a> CmdHandler<'a> {
     }
 
     fn bad_usage(&self) {
-        print_error("Invalid arguments.\n");
-        println!("{}", self.short_usage());
+        let mut msg = Message::new();
+        msg.set_error(true);
+
+        msg.add_line("Invalid arguments.");
+        msg.add_line(&self.short_usage());
+        msg.print()
     }
 
     /// Run the main logic without auto retrieving of argv
@@ -182,8 +178,11 @@ impl<'a> CmdHandler<'a> {
 
         match sim_cmd {
             Some(cmd) => {
-                print_error("No such subcommand\n");
-                print_error(&format!("    Did you mean `{}`?", cmd.name()));
+                let mut msg = Message::new();
+                msg.set_error(true);
+                msg.add_line("No such subcommand\n");
+                msg.add_line(&format!("    Did you mean `{}`?", cmd.name()));
+                msg.print();
                 return;
             }
             None => {}
@@ -194,9 +193,11 @@ impl<'a> CmdHandler<'a> {
 
 
     fn help_for_command(&self, name: &str) {
+        let mut msg = Message::new();
         for cmd in self.subcmd.iter() {
             if cmd.name() == name {
-                println!("{}", cmd.help());
+                msg.add_line(cmd.help());
+                msg.print();
                 return;
             };
         }
