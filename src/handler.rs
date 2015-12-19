@@ -13,6 +13,16 @@ use std::io::Write;
 use getopts::Options;
 use getopts::ParsingStyle;
 use tabwriter::TabWriter;
+use strsim::damerau_levenshtein;
+use ansi_term::Colour::Red;
+
+fn print_error(msg: &str) {
+    if cfg!(target_os = "macos") || cfg!(target_os = "linux") {
+        println!("{}", Red.paint(msg).to_string());
+    } else {
+        println!("{}", msg);
+    }
+}
 
 /// Command line parser and subcommand runner
 ///
@@ -100,7 +110,7 @@ impl<'a> Handler<'a> {
     }
 
     fn bad_usage(&self) {
-        println!("Invalid arguments.\n");
+        print_error("Invalid arguments.\n");
         println!("{}", self.short_usage());
     }
 
@@ -155,6 +165,28 @@ impl<'a> Handler<'a> {
             self.help_for_command(&matches.free[1]);
             return;
         }
+
+
+        // No command found, check for similariy
+        let mut sim_cmd: Option<&Box<Command>> = None;
+        // We only want command with a similarity lowest than 3
+        let mut lowest_sim: usize = 3;
+        for cmd in self.subcmd.iter() {
+            let new_sim = damerau_levenshtein(cmd.name(), &command);
+            if new_sim < lowest_sim {
+                lowest_sim = new_sim;
+                sim_cmd = Some(cmd);
+            }
+        }
+
+        match sim_cmd {
+            Some(cmd) => {
+                print_error("No such subcommand\n");
+                print_error(&format!("    Did you mean `{}`?", cmd.name()));
+                return;
+            }
+            None => {}
+        };
 
         self.bad_usage();
     }
