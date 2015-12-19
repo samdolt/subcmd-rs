@@ -60,7 +60,7 @@ impl<'a> CmdHandler<'a> {
     ///
     /// This function retrieve argv, parse-it and run the corresponding
     /// subcommand
-    pub fn run(&mut self) {
+    pub fn run(self) {
         let args: Vec<String> = env::args().collect();
         self.run_with_args(&args)
     }
@@ -112,7 +112,7 @@ impl<'a> CmdHandler<'a> {
     }
 
     /// Run the main logic without auto retrieving of argv
-    pub fn run_with_args(&mut self, args: &Vec<String>) {
+    pub fn run_with_args(mut self, args: &Vec<String>) {
         self.program = args[0].clone();
 
         let mut opts = Options::new();
