@@ -4,6 +4,7 @@
 [![App Veyor Status](https://img.shields.io/appveyor/ci/samdolt/subcmd-rs/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/samdolt/subcmd-rs)
 ![Rust min version](https://img.shields.io/badge/Rust-%3E%3D%201.2-blue.svg)
 [![Crates.io version](https://img.shields.io/crates/v/subcmd.svg)](https://crates.io/crates/subcmd/)
+[![Clippy Linting Result](https://clippy.bashy.io/github/samdolt/subcmd-rs/master/badge.svg)](https://clippy.bashy.io/github/samdolt/subcmd-rs/master/log)
 
 ## Cargo style subcommand
 
