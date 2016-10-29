@@ -8,10 +8,10 @@ repository = "https://github.com/samdolt/subcmd-rs/"
 homepage = "https://github.com/samdolt/subcmd-rs/"
 readme = "README.md"
 keywords = ["subcommand", "args", "argv", "options"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 getopts = "0.2"
 tabwriter = "0.1"
-strsim = "0.4"
-ansi_term = "0.7.1"
+strsim = "0.5.1"
+ansi_term = "0.9.0"
