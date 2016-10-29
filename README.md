@@ -32,4 +32,13 @@ i.e. Automaticaly pass argv to a corresponding subcommand (here build or clean).
 - [ ] Search for `myproject-cmd-subcommand` in the $PATH if there is no built-in subcommand.
 - [ ] Allow project wide option like `myproject --verbose clean` instead of `myproject clean --verbose`
 
+## License
 
+Licensed under the Apache License, Version 2.0 <[LICENSE-APACHE][1] or
+[http://www.apache.org/licenses/LICENSE-2.0][2]> or the MIT license
+<[LICENSE-MIT][3] or [http://opensource.org/licenses/MIT][4]>, at your option.
+
+[1]: ./LICENSE-APACHE
+[2]: http://www.apache.org/licenses/LICENSE-2.0
+[3]: ./LICENSE-MIT
+[4]: http://opensource.org/licenses/MIT
