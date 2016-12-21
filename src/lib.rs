@@ -53,7 +53,7 @@
 //!     let mut handler = CmdHandler::new();
 //!     handler.add(Box::new(CmdBuild));
 //!     handler.add(Box::new(CmdClean));
-//!     handler.parse();
+//!     handler.run();
 //! }
 //! ```
 
