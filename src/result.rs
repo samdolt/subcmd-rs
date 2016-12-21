@@ -20,7 +20,7 @@ use CmdWrapper;
 /// use subcmd::CmdResult;
 ///
 /// let handler = CmdHandler::new();
-/// match handler.run() {
+/// match handler.parse() {
 ///     CmdResult::Help(msg)           => msg.print(),
 ///     CmdResult::HelpForCmd(cmd)     => cmd.print_help(),
 ///     CmdResult::BadUsage(msg)       => msg.print(),
