@@ -205,6 +205,16 @@ impl<'a> CmdHandler<'a> {
         CmdResult::UnknowCmd(msg)
     }
 
+    // Parse and run the requested command
+    pub fn run(mut self) {
+        match self.parse() {
+            CmdResult::Help(msg) => msg.print(),
+            CmdResult::HelpForCmd(cmd) => cmd.print_help(),
+            CmdResult::BadUsage(msg) => msg.print(),
+            CmdResult::UnknowCmd(msg) => msg.print(),
+            CmdResult::Cmd(cmd) => cmd.run(),
+        }
+    }
 
     fn help_for_command(&mut self, name: &str) -> CmdResult {
         for index in 0..self.commands.len() {
