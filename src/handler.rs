@@ -32,7 +32,7 @@ use strsim::damerau_levenshtein;
 /// // handler.add(Box::new(MyCommand));
 /// // handler.add(Box::new(AnotherCommand));
 ///
-/// handler.run(); // Run main logic
+/// handler.parse(); // Run main logic
 /// ```
 pub struct CmdHandler<'a> {
     description: Option<&'a str>,
@@ -128,7 +128,7 @@ impl<'a> CmdHandler<'a> {
 
 
     /// Run the main logic
-    pub fn run(mut self) -> CmdResult {
+    pub fn parse(mut self) -> CmdResult {
         let mut opts = Options::new();
 
         // We don't want to parse option after the subcommand
@@ -265,7 +265,7 @@ mod tests {
 
         handler.override_args(args);
 
-        match handler.run() {
+        match handler.parse() {
             CmdResult::Help(msg) => {
                 assert!(msg.get().contains("Usage"));
                 assert!(msg.get().contains("Commands are:"));
@@ -281,7 +281,7 @@ mod tests {
 
         handler.override_args(args);
 
-        match handler.run() {
+        match handler.parse() {
             CmdResult::BadUsage(msg) => {
                 assert!(msg.get().contains("Invalid argument"));
             }
@@ -298,7 +298,7 @@ mod tests {
         handler.add(Box::new(CmdA));
         handler.add(Box::new(AnotherCmd));
 
-        match handler.run() {
+        match handler.parse() {
             CmdResult::BadUsage(msg) => {
                 assert!(msg.get().contains("cmd-a"));
             }
@@ -315,7 +315,7 @@ mod tests {
         handler.add(Box::new(CmdA));
         handler.add(Box::new(CmdA));
 
-        match handler.run() {
+        match handler.parse() {
             CmdResult::UnknowCmd(msg) => assert!(msg.get().contains("No such subcommand")),
             _ => unreachable!(),
         }
@@ -330,7 +330,7 @@ mod tests {
         handler.add(Box::new(CmdA));
         handler.add(Box::new(CmdA));
 
-        match handler.run() {
+        match handler.parse() {
             CmdResult::Cmd(cmd) => assert_eq!(cmd.name(), "cmd-a"),
             _ => unreachable!(),
         }
@@ -345,7 +345,7 @@ mod tests {
         handler.add(Box::new(CmdA));
         handler.add(Box::new(CmdA));
 
-        match handler.run() {
+        match handler.parse() {
             CmdResult::HelpForCmd(cmd) => assert_eq!(cmd.name(), "cmd-a"),
             _ => unreachable!(),
         }
