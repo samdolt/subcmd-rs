@@ -26,13 +26,11 @@ use strsim::damerau_levenshtein;
 ///
 /// ```
 /// use subcmd::CmdHandler;
-/// let mut handler = CmdHandler::new();
-///
+/// CmdHandler::new()
 /// // Add your custom command here
-/// // handler.add(Box::new(MyCommand));
-/// // handler.add(Box::new(AnotherCommand));
-///
-/// handler.parse(); // Run main logic
+///          //.add(Box::new(MyCommand));
+///          // .add(Box::new(AnotherCommand));
+///             .run(); // Run main logic
 /// ```
 pub struct CmdHandler<'a> {
     description: Option<&'a str>,
@@ -56,26 +54,21 @@ impl<'a> CmdHandler<'a> {
     }
 
     /// Set a one line description, used in `bin --help`
-    pub fn set_description(&mut self, descr: &'a str) {
+    pub fn set_description<'b>(mut self, descr: &'a str) -> CmdHandler<'a> {
         self.description = Some(descr);
-    }
-
-    /// Get the program description
-    pub fn get_description(&mut self) -> &'a str {
-        match self.description {
-            Some(descr) => descr,
-            None => "",
-        }
+        self
     }
 
     /// Override default args
-    pub fn override_args(&mut self, args: Vec<String>) {
+    pub fn override_args(mut self, args: Vec<String>) -> CmdHandler<'a> {
         self.args = args;
+        self
     }
 
     /// Register a new subcommand
-    pub fn add(&mut self, command: Box<Command>) {
+    pub fn add<'b>(mut self, command: Box<Command>) -> CmdHandler<'a> {
         self.commands.push(command);
+        self
     }
 
     fn short_usage(&self) -> String {
@@ -205,8 +198,8 @@ impl<'a> CmdHandler<'a> {
         CmdResult::UnknowCmd(msg)
     }
 
-    // Parse and run the requested command
-    pub fn run(mut self) {
+    /// Parse and run the requested command
+    pub fn run(self) {
         match self.parse() {
             CmdResult::Help(msg) => msg.print(),
             CmdResult::HelpForCmd(cmd) => cmd.print_help(),
@@ -270,12 +263,9 @@ mod tests {
 
     #[test]
     fn test_usage() {
-        let mut handler = CmdHandler::new();
         let args: Vec<String> = vec!["bin".to_string(), "-h".to_string()];
 
-        handler.override_args(args);
-
-        match handler.parse() {
+        match CmdHandler::new().override_args(args).parse() {
             CmdResult::Help(msg) => {
                 assert!(msg.get().contains("Usage"));
                 assert!(msg.get().contains("Commands are:"));
@@ -286,12 +276,9 @@ mod tests {
 
     #[test]
     fn test_bad_usage() {
-        let mut handler = CmdHandler::new();
         let args: Vec<String> = vec!["bin".to_string(), "--unknow".to_string()];
 
-        handler.override_args(args);
-
-        match handler.parse() {
+        match CmdHandler::new().override_args(args).parse() {
             CmdResult::BadUsage(msg) => {
                 assert!(msg.get().contains("Invalid argument"));
             }
@@ -301,12 +288,12 @@ mod tests {
 
     #[test]
     fn test_bad_command() {
-        let mut handler = CmdHandler::new();
         let args: Vec<String> = vec!["bin".to_string(), "cmd-b".to_string()];
 
-        handler.override_args(args);
-        handler.add(Box::new(CmdA));
-        handler.add(Box::new(AnotherCmd));
+        let handler = CmdHandler::new()
+            .override_args(args)
+            .add(Box::new(CmdA))
+            .add(Box::new(AnotherCmd));
 
         match handler.parse() {
             CmdResult::BadUsage(msg) => {
@@ -318,12 +305,12 @@ mod tests {
 
     #[test]
     fn test_unknow_cmd() {
-        let mut handler = CmdHandler::new();
         let args: Vec<String> = vec!["bin".to_string(), "bbbbbbbbbbb".to_string()];
 
-        handler.override_args(args);
-        handler.add(Box::new(CmdA));
-        handler.add(Box::new(CmdA));
+        let handler = CmdHandler::new()
+            .override_args(args)
+            .add(Box::new(CmdA))
+            .add(Box::new(AnotherCmd));
 
         match handler.parse() {
             CmdResult::UnknowCmd(msg) => assert!(msg.get().contains("No such subcommand")),
@@ -333,12 +320,12 @@ mod tests {
 
     #[test]
     fn test_cmd() {
-        let mut handler = CmdHandler::new();
         let args: Vec<String> = vec!["bin".to_string(), "cmd-a".to_string()];
 
-        handler.override_args(args);
-        handler.add(Box::new(CmdA));
-        handler.add(Box::new(CmdA));
+        let handler = CmdHandler::new()
+            .override_args(args)
+            .add(Box::new(CmdA))
+            .add(Box::new(AnotherCmd));
 
         match handler.parse() {
             CmdResult::Cmd(cmd) => assert_eq!(cmd.name(), "cmd-a"),
@@ -348,12 +335,12 @@ mod tests {
 
     #[test]
     fn test_help_for_cmd() {
-        let mut handler = CmdHandler::new();
         let args: Vec<String> = vec!["bin".to_string(), "help".to_string(), "cmd-a".to_string()];
 
-        handler.override_args(args);
-        handler.add(Box::new(CmdA));
-        handler.add(Box::new(CmdA));
+        let handler = CmdHandler::new()
+            .override_args(args)
+            .add(Box::new(CmdA))
+            .add(Box::new(AnotherCmd));
 
         match handler.parse() {
             CmdResult::HelpForCmd(cmd) => assert_eq!(cmd.name(), "cmd-a"),
