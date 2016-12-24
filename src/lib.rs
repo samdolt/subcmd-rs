@@ -50,10 +50,11 @@
 //! }
 //!
 //! fn main() {
-//!     let mut handler = CmdHandler::new();
-//!     handler.add(Box::new(CmdBuild));
-//!     handler.add(Box::new(CmdClean));
-//!     handler.parse();
+//!     CmdHandler::new()
+//!                .set_description("Rust's package manager.")
+//!                .add(Box::new(CmdBuild))
+//!                .add(Box::new(CmdClean))
+//!                .run();
 //! }
 //! ```
 
